@@ -1,0 +1,91 @@
+# Database data directories
+mysql/data/
+*/data/
+**/data/
+
+# Docker/Podman generated files
+**/docker-compose.override.yml
+**/podman-compose.override.yml
+
+# Database files
+*.sql
+*.db
+*.sqlite
+*.sqlite3
+
+# Redis dump files
+*.rdb
+dump.rdb
+**/dump.rdb
+
+# Logs
+*.log
+logs/
+**/logs/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+**/.env
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Container volume data
+docmost-db/
+docmost-redis/
+portainer_data/
+
+# MariaDB/MySQL specific
+mysql/data/aria_log*
+mysql/data/ib_*
+mysql/data/ddl_recovery.log
+mysql/data/multi-master.info
+mysql/data/tc.log
+mysql/data/undo*
+mysql/data/mariadb_upgrade_info
+mysql/data/mysql/
+mysql/data/performance_schema/
+mysql/data/sys/
+
+# Uploaded files and user data
+**/files/
+**/imports/
+**/uploads/
+
+# Node modules (if any)
+node_modules/
+**/node_modules/
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Git directory (if nested)
+**/.git/
