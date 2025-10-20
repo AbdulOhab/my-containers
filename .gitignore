@@ -1,12 +1,3 @@
-# Database data directories
-mysql/data/
-*/data/
-**/data/
-
-# Docker/Podman generated files
-**/docker-compose.override.yml
-**/podman-compose.override.yml
-
 # Database files
 *.sql
 *.db
@@ -59,18 +50,16 @@ temp/
 docmost-db/
 docmost-redis/
 portainer_data/
+01997ff8-94f5-7e98-a228-0b36605b0c9e
 
 # MariaDB/MySQL specific
-mysql/data/aria_log*
-mysql/data/ib_*
-mysql/data/ddl_recovery.log
-mysql/data/multi-master.info
-mysql/data/tc.log
-mysql/data/undo*
-mysql/data/mariadb_upgrade_info
-mysql/data/mysql/
-mysql/data/performance_schema/
-mysql/data/sys/
+mysql/data/
+mysql/php/
+
+
+# redash_data
+pgdata/
+redash_data/
 
 # Uploaded files and user data
 **/files/

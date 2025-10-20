@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  portainer:
+    image: docker.io/portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "7899:9000" # HTTP UI (optional)
+    volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:Z
+      - portainer_data:/data
+
+volumes:
+  portainer_data:
