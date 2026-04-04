@@ -64,6 +64,7 @@ adminer/adminer_data/
 # MariaDB/MySQL specific
 mysql/data/
 mysql/php/
+mysql/mysql_data/
 
 
 # redash_data
