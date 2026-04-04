@@ -66,6 +66,11 @@ mysql/data/
 mysql/php/
 mysql/mysql_data/
 
+# PostgreSQL data
+postgresql/postgresql_data/
+
+# pgAdmin data
+pgadmin/pgadmin_data/
 
 # redash_data
 pgdata/

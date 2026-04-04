@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  postgresql:
+    image: docker.io/postgres:16-alpine
+    container_name: postgresql-server
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+      POSTGRES_USER: ${POSTGRES_USER}
+    ports:
+      - "${POSTGRES_PORT:-24005}:5432"
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data:Z
+    networks:
+      - db_stack
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  db_stack:
+    external: true

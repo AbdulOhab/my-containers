@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  pgadmin:
+    image: docker.io/dpage/pgadmin4:latest
+    container_name: pgadmin-server
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "${PGADMIN_PORT:-24006}:80"
+    volumes:
+      - ./pgadmin_data:/var/lib/pgadmin:Z
+    networks:
+      - db_stack
+
+networks:
+  db_stack:
+    external: true

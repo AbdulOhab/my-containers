@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  apache:
+    image: docker.io/php:apache
+    container_name: apache-server
+    ports:
+      - "5050:80"
+    volumes:
+      - ./html:/var/www/html
+    restart: unless-stopped
