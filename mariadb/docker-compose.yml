@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: docker.io/library/mariadb:10.11
+    container_name: mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DATABASE}
+      MYSQL_USER: ${MARIADB_USER}
+      MYSQL_PASSWORD: ${MARIADB_PASSWORD}
+    ports:
+      - "${MARIADB_PORT:-24001}:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - db_stack
+
+volumes:
+  mariadb_data:
+
+networks:
+  db_stack:
+    external: true

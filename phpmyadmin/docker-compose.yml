@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  phpmyadmin:
+    image: docker.io/phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: ${MARIADB_HOST:-mariadb}
+      PMA_PORT: ${MARIADB_PORT:-3306}
+      PMA_USER: ${MARIADB_USER}
+      PMA_PASSWORD: ${MARIADB_PASSWORD}
+      UPLOAD_LIMIT: ${PMA_UPLOAD_LIMIT:-256M}
+    ports:
+      - "${PMA_PORT:-24003}:80"
+    networks:
+      - db_stack
+
+networks:
+  db_stack:
+    external: true

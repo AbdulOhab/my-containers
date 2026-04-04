@@ -28,12 +28,12 @@ services:
     depends_on:
       - mariadb
 
-  # adminer:
-  #   image: docker.io/library/adminer:latest
-  #   container_name: database-adminer
-  #   environment:
-  #     ADMINER_DEFAULT_SERVER: mariadb
-  #   ports:
-  #     - "5052:8080"
-  #   depends_on:
-  #     - mariadb
+  adminer:
+    image: docker.io/library/adminer:latest
+    container_name: database-adminer
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    ports:
+      - "5052:8080"
+    depends_on:
+      - mariadb
