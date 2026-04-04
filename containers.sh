@@ -17,6 +17,20 @@ BOLD='\033[1m'
 declare -a COMPOSE_FILES=()
 declare -a RUNNING_PROJECTS=()
 
+# Get server IP address
+get_server_ip() {
+  # Try to get IP from common methods
+  local ip=$(hostname -I 2>/dev/null | awk '{print $1}')
+  if [[ -z "$ip" ]]; then
+    ip=$(ip route get 1 2>/dev/null | awk '{print $7}' | head -1)
+  fi
+  if [[ -z "$ip" ]]; then
+    ip=$(ip addr show 2>/dev/null | grep 'inet ' | grep -v '127.0.0.1' | awk '{print $2}' | cut -d/ -f1 | head -1)
+  fi
+  # Fallback to localhost if no IP found
+  echo "${ip:-localhost}"
+}
+
 # Get all running podman compose projects
 get_running_projects() {
   podman ps --format "{{.Label \"io.podman.compose.project\"}}" 2>/dev/null | sort -u | grep -v "^$"
@@ -125,10 +139,12 @@ parse_selection() {
 # Display header
 print_header() {
   clear
+  local SERVER_IP=$(get_server_ip)
   printf "${BOLD}${CYAN}============================================${NC}\n"
   printf "${BOLD}${CYAN}    Container Status Scanner${NC}\n"
   printf "${BOLD}${CYAN}============================================${NC}\n"
   printf "${YELLOW}Directory: ${SCRIPT_DIR}${NC}\n"
+  printf "${YELLOW}Server IP: ${CYAN}${SERVER_IP}${NC}\n"
   printf "\n"
 }
 
@@ -183,8 +199,11 @@ print_status() {
 show_running_details() {
   printf "${BOLD}${BLUE}============================================${NC}\n"
   printf "${BOLD}${BLUE}Running Containers Details${NC}\n"
-  printf "${BOLD}${BLUE}============================================${NC}\n"
+  printf "${BOLD}$3{BLUE}============================================${NC}\n"
   printf "\n"
+
+  # Get server IP
+  local SERVER_IP=$(get_server_ip)
 
   running=$(podman ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" 2>/dev/null)
 
@@ -193,12 +212,12 @@ show_running_details() {
   else
     echo "$running"
     printf "\n"
-    printf "${BOLD}Access Links:${NC}\n"
+    printf "${BOLD}Access Links (${CYAN}Server IP: $SERVER_IP${NC}):${NC}\n"
 
     podman ps --format "{{.Names}}\t{{.Ports}}" 2>/dev/null | while IFS=$'\t' read -r name ports; do
       if [[ -n "$ports" ]]; then
         echo "$ports" | grep -oE '0\.0\.0\.0:([0-9]+)' | cut -d: -f2 | while read -r port; do
-          printf "  ${GREEN}->${NC} $name -> ${BLUE}http://localhost:$port${NC}\n"
+          printf "  ${GREEN}->${NC} $name -> ${BLUE}http://$SERVER_IP:$port${NC}\n"
         done
       fi
     done
