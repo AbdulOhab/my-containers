@@ -447,27 +447,34 @@ main() {
       printf "${BOLD}${YELLOW}View Project Logs${NC}\n"
       printf "\n"
 
-      if [[ ${#RUNNING_PROJECTS[@]} -eq 0 ]]; then
-        printf "${YELLOW}No projects are currently running!${NC}\n"
+      # Get all running containers
+      local -a all_containers=()
+      while IFS= read -r line; do
+        [[ -n "$line" ]] && all_containers+=("$line")
+      done < <(podman ps --format "{{.Names}}" 2>/dev/null)
+
+      if [[ ${#all_containers[@]} -eq 0 ]]; then
+        printf "${YELLOW}No containers are currently running!${NC}\n"
       else
-        printf "Running projects:\n"
+        printf "Running containers:\n"
         printf "\n"
         local i=1
-        for project in "${RUNNING_PROJECTS[@]}"; do
-          echo "  $i) $project"
+        for container in "${all_containers[@]}"; do
+          echo "  $i) $container"
           ((i++))
         done
         echo "  0) Cancel"
         printf "\n"
-        read -rp "Select project to view logs: " log_choice
+        read -rp "Select container to view logs: " log_choice
 
-        if [[ "$log_choice" =~ ^[0-9]+$ ]] && ((log_choice >= 1 && log_choice <= ${#RUNNING_PROJECTS[@]})); then
-          selected="${RUNNING_PROJECTS[$((log_choice-1))]}"
+        if [[ "$log_choice" =~ ^[0-9]+$ ]] && ((log_choice >= 1 && log_choice <= ${#all_containers[@]})); then
+          selected="${all_containers[$((log_choice-1))]}"
           clear
           printf "${BOLD}Showing logs for: $selected${NC}\n"
           printf "${YELLOW}(Press Ctrl+C to exit logs)${NC}\n"
           printf "\n"
-          podman logs -f --filter "label=io.podman.compose.project=$selected" 2>/dev/null
+          printf "${BLUE}============================================${NC}\n"
+          podman logs -f "$selected" 2>/dev/null
         fi
       fi
       printf "\n"

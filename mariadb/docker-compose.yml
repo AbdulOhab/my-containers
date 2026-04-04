@@ -3,7 +3,7 @@ version: "3.8"
 services:
   mariadb:
     image: docker.io/library/mariadb:10.11
-    container_name: mariadb
+    container_name: mariadb-server
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}

@@ -3,11 +3,11 @@ version: "3.8"
 services:
   adminer:
     image: docker.io/adminer:latest
-    container_name: adminer
+    container_name: adminer-server
     restart: unless-stopped
     environment:
       ADMINER_DEFAULT_SERVER: ${MARIADB_HOST:-mariadb}
-      ADMINER_PORT: ${MARIADB_PORT:-3306}
+      ADMINER_PORT: ${MARIADB_INTERNAL_PORT:-3306}
     ports:
       - "${ADMINER_PORT:-24002}:8080"
     networks:
