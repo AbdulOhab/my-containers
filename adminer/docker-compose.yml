@@ -10,6 +10,8 @@ services:
       ADMINER_PORT: ${MARIADB_INTERNAL_PORT:-3306}
     ports:
       - "${ADMINER_PORT:-24002}:8080"
+    volumes:
+      - ./adminer_data:/var/www/html/data:Z
     networks:
       - db_stack
 

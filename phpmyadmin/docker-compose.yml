@@ -13,6 +13,8 @@ services:
       UPLOAD_LIMIT: ${PMA_UPLOAD_LIMIT:-256M}
     ports:
       - "${PMA_PORT:-24003}:80"
+    volumes:
+      - ./phpmyadmin_data:/sessions:Z
     networks:
       - db_stack
 

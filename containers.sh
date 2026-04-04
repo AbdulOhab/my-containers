@@ -199,7 +199,7 @@ print_status() {
 show_running_details() {
   printf "${BOLD}${BLUE}============================================${NC}\n"
   printf "${BOLD}${BLUE}Running Containers Details${NC}\n"
-  printf "${BOLD}$3{BLUE}============================================${NC}\n"
+  printf "${BOLD}${BLUE}============================================${NC}\n"
   printf "\n"
 
   # Get server IP

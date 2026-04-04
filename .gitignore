@@ -52,6 +52,15 @@ docmost-redis/
 portainer_data/
 01997ff8-94f5-7e98-a228-0b36605b0c9e
 
+# MariaDB data
+mariadb/mariadb_data/
+
+# phpMyAdmin data
+phpmyadmin/phpmyadmin_data/
+
+# Adminer data
+adminer/adminer_data/
+
 # MariaDB/MySQL specific
 mysql/data/
 mysql/php/

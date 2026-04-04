@@ -13,12 +13,9 @@ services:
     ports:
       - "${MARIADB_PORT:-24001}:3306"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - ./mariadb_data:/var/lib/mysql:Z
     networks:
       - db_stack
-
-volumes:
-  mariadb_data:
 
 networks:
   db_stack:
