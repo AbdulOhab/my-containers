@@ -67,3 +67,38 @@ podman network create db_stack
 - MariaDB, Adminer, phpMyAdmin, PostgreSQL, and pgAdmin are separate services.
 - Docmost uses its own bundled db and redis services.
 - Apache serves files from its local volume.
+
+---
+
+## নির্দেশনা (Instructions in Bengali)
+
+### কন্টেইনার ম্যানেজমেন্ট
+- সব সার্ভিস চেক করতে: `./containers.sh`
+- একটি সার্ভিস স্টার্ট করতে: `cd <service> && podman-compose up -d`
+- একটি সার্ভিস স্টপ করতে: `cd <service> && podman-compose down`
+- লগ দেখতে: `cd <service> && podman-compose logs -f`
+
+### ফাইল এডিট করার নিয়ম
+- সবসময় compose ফাইল পড়ুন আগে
+- ছোট পরিবর্তন করুন
+- নতুন সার্ভিস, পোর্ট বা পাথ তৈরি করবেন না
+- পরিবর্তনের সময় ব্যবহারকারীকে জানান
+
+### ইমেজ ফরম্যাট
+- সবসময় পূর্ণ পাথ ব্যবহার করুন: `docker.io/image:tag`
+- ভলিউমে সম্পূর্ণ পাথ ব্যবহার করুন (যেমন: `/home/abdulwahab/Desktop/Containers/...`)
+- ব্যাকআপ লোড করতে সুবিধার জন্য `./backups:/backups:Z` ভলিউম যোগ করুন
+
+### Git কমিট
+- ব্যবহারকারী যখন "write commit" বলে, তখন কমিট তৈরি করুন
+- কমিট মেসেজ সংক্ষিপ্ত এবং স্পষ্ট রাখুন
+
+### পোর্ট স্ট্যান্ডার্ড
+- Portainer: 24000
+- MariaDB: 24001
+- Adminer: 24002
+- phpMyAdmin: 24003
+- PostgreSQL: 24005
+- pgAdmin: 24006
+- Docmost: 5601
+- Apache: 5050

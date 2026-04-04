@@ -93,3 +93,7 @@ __pycache__/
 
 # Git directory (if nested)
 **/.git/
+
+# Apache html files (keep directory structure)
+apache/html/*
+!apache/html/.gitkeep

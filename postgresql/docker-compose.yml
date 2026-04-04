@@ -13,6 +13,7 @@ services:
       - "${POSTGRES_PORT:-24005}:5432"
     volumes:
       - ./postgresql_data:/var/lib/postgresql/data:Z
+      - ./backups:/backups:Z
     networks:
       - db_stack
     healthcheck:
