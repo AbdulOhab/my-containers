@@ -10,6 +10,7 @@ Keep this repo simple: one service per folder, managed with Podman.
 - portainer/
 - postgresql/
 - pgadmin/
+- cloudbeaver/
 - docmost/
 - apache/
 
@@ -37,6 +38,7 @@ Keep this repo simple: one service per folder, managed with Podman.
 - phpMyAdmin: 24003
 - PostgreSQL: 24005
 - pgAdmin: 24006
+- CloudBeaver: 24007
 - Docmost: 5601
 - Apache: 5050
 
@@ -64,7 +66,7 @@ podman network create db_stack
 
 ## Current project notes
 
-- MariaDB, Adminer, phpMyAdmin, PostgreSQL, and pgAdmin are separate services.
+- MariaDB, Adminer, phpMyAdmin, PostgreSQL, pgAdmin, and CloudBeaver are separate services.
 - Docmost uses its own bundled db and redis services.
 - Apache serves files from its local volume.
 
@@ -100,5 +102,6 @@ podman network create db_stack
 - phpMyAdmin: 24003
 - PostgreSQL: 24005
 - pgAdmin: 24006
+- CloudBeaver: 24007
 - Docmost: 5601
 - Apache: 5050

@@ -72,6 +72,9 @@ postgresql/postgresql_data/
 # pgAdmin data
 pgadmin/pgadmin_data/
 
+# CloudBeaver data
+cloudbeaver/cloudbeaver_data/
+
 # redash_data
 pgdata/
 redash_data/

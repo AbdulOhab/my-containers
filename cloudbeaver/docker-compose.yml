@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  cloudbeaver:
+    image: docker.io/cloudbeaver/cloudbeaver-community:latest
+    container_name: cloudbeaver-server
+    restart: unless-stopped
+    ports:
+      - "${CLOUDBEAVER_PORT:-24007}:8978"
+    volumes:
+      - ./cloudbeaver_data:/opt/cloudbeaver/workspace:Z
+    environment:
+      CB_SERVER_CONFIG_PATH: /opt/cloudbeaver/workspace/conf
+    networks:
+      - db_stack
+
+networks:
+  db_stack:
+    external: true
