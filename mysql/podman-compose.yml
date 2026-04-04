@@ -22,7 +22,7 @@ services:
       PMA_PORT: 3306
       UPLOAD_LIMIT: 128M
       MEMORY_LIMIT: 256M
-      MAX_EXECUTION_TIME: 300 
+      MAX_EXECUTION_TIME: 300
     ports:
       - "5051:80"
     depends_on:
