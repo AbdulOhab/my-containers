@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   cloudbeaver:
-    image: docker.io/cloudbeaver/cloudbeaver-community:latest
+    image: docker.io/dbeaver/cloudbeaver-server:latest
     container_name: cloudbeaver-server
     restart: unless-stopped
     ports:
