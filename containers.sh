@@ -33,7 +33,41 @@ get_server_ip() {
 
 # Get all running podman compose projects
 get_running_projects() {
-  podman ps --format "{{.Label \"io.podman.compose.project\"}}" 2>/dev/null | sort -u | grep -v "^$"
+  local projects=()
+
+  # Get projects by compose label
+  while IFS= read -r project; do
+    [[ -n "$project" ]] && projects+=("$project")
+  done < <(podman ps --format "{{.Label \"io.podman.compose.project\"}}" 2>/dev/null | sort -u | grep -v "^$")
+
+  # Also extract project names from container names (fallback)
+  # For containers like "postgresql-server", "mariadb-server", "docmost_db_1", etc.
+  while IFS= read -r container_name; do
+    # Extract base name from various patterns
+    # postgresql-server → postgresql
+    # mariadb-server → mariadb
+    # adminer-server → adminer
+    # docmost_db_1 → docmost (from first part)
+    # portainer → portainer
+
+    # Pattern 1: Remove -server, -container suffix
+    base_name=$(echo "$container_name" | sed -E 's/-(server|container)$//')
+
+    # Pattern 2: For names like docmost_db_1, extract first part
+    if [[ "$base_name" == *"_"* ]]; then
+      base_name=$(echo "$base_name" | cut -d_ -f1)
+    fi
+
+    # Pattern 3: For names like postgres_report_application, extract first part
+    if [[ "$base_name" == *"_"* ]] && [[ "$base_name" != *"_"*"_"* ]]; then
+      base_name=$(echo "$base_name" | cut -d_ -f1)
+    fi
+
+    [[ -n "$base_name" ]] && projects+=("$base_name")
+  done < <(podman ps --format "{{.Names}}" 2>/dev/null)
+
+  # Return unique sorted list
+  printf '%s\n' "${projects[@]}" | sort -u | grep -v "^$"
 }
 
 # Find all yml/yaml files in current directory and subdirectories
@@ -96,11 +130,32 @@ get_project_dir() {
 # Check if a specific project is running
 is_project_running() {
   local project=$1
+
+  # First check by compose project label
   for running in "${RUNNING_PROJECTS[@]}"; do
     if [[ "$project" == "$running" ]]; then
       return 0
     fi
   done
+
+  # Also check by container name pattern (fallback for containers without proper labels)
+  # This handles: postgresql-server, mariadb-server, adminer-server, cloudbeaver-server, etc.
+  local running_containers=$(podman ps --format "{{.Names}}" 2>/dev/null)
+
+  # Check for common naming patterns
+  if echo "$running_containers" | grep -q "^${project}-server"; then
+    return 0
+  fi
+  if echo "$running_containers" | grep -q "^${project}-container"; then
+    return 0
+  fi
+  if echo "$running_containers" | grep -q "^${project}_[0-9]"; then
+    return 0
+  fi
+  if echo "$running_containers" | grep -q "^${project}_"; then
+    return 0
+  fi
+
   return 1
 }
 
@@ -173,8 +228,22 @@ print_status() {
     if is_project_running "$project_name"; then
       ((running_count++))
 
-      # Get container count
+      # Get container count - check by both label and name pattern
+      local container_count=0
+
+      # First try by label
       container_count=$(podman ps --filter "label=io.podman.compose.project=$project_name" --format "{{.Names}}" 2>/dev/null | wc -l)
+
+      # If no containers found by label, try by name pattern
+      if [[ "$container_count" -eq 0 ]]; then
+        container_count=$(podman ps --format "{{.Names}}" 2>/dev/null | grep -c "^${project_name}-" || echo "0")
+      fi
+
+      # Still zero? Try more flexible pattern
+      if [[ "$container_count" -eq 0 ]]; then
+        container_count=$(podman ps --format "{{.Names}}" 2>/dev/null | grep -c "^${project_name}" || echo "0")
+      fi
+
       containers="$container_count container(s)"
 
       # Print with green UP status
