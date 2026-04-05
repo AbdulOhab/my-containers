@@ -100,3 +100,5 @@ __pycache__/
 # Apache html files (keep directory structure)
 apache/html/*
 !apache/html/.gitkeep
+
+CONNECTION-GUIDE.md
