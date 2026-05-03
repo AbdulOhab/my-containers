@@ -1,0 +1,39 @@
+# Dobase - Open-source workspace with installable tools
+version: '3.8'
+
+services:
+  dobase:
+    image: ghcr.io/smgdkngt/dobase:latest
+    container_name: dobase-server
+    environment:
+      SECRET_KEY_BASE: 4ad100bc51782ee0ecb17aea2f963e86160f43192c54666063b02264fb4cb659117a2c14c434e7637fe93257939296cf7ff15165a3902953cecf087dd91490f6
+      APP_NAME: Dobase
+      PORT: '8080'
+      APP_HOST: localhost:24013
+      DISABLE_SSL: 'true'
+    ports:
+      - '24013:8080'
+    command: ["./bin/rails", "server", "-p", "8080", "-b", "0.0.0.0"]
+    restart: unless-stopped
+    volumes:
+      - ./storage:/rails/storage:Z
+    networks:
+      - db_stack
+
+networks:
+  db_stack:
+    external: true
+
+# add make permissions for volumes
+# first down:
+# podc down
+# sudo rm -rf ./storage
+# mkdir storage
+# then permissions:
+# podman unshare chown -R 1000:1000 ./storage
+# then up:
+# podc up -d
+# then seed:
+# podman exec -it dobase-server bin/rails db:seed SEED_DEMO=1
+# info: http://localhost:24013
+# sophie@moonshot-snacks.com | password123

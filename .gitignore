@@ -52,6 +52,14 @@ docmost-redis/
 portainer_data/
 01997ff8-94f5-7e98-a228-0b36605b0c9e
 
+# Docmost data
+docmost/data/
+docmost/backups/
+docmost/redis-data/
+
+# Dobase data
+dobase/storage/
+
 # MariaDB data
 mariadb/mariadb_data/
 
