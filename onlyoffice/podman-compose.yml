@@ -1,0 +1,77 @@
+# ============================================================
+#  Nextcloud (file storage) + ONLYOFFICE (editor) + MariaDB
+#  For Podman (podman compose / podman-compose)
+#  Local network, HTTP only.
+# ------------------------------------------------------------
+services:
+
+  # ---------- Database for Nextcloud ----------
+  nextcloud-db:
+    image: docker.io/library/mariadb:10.11
+    container_name: nextcloud-db
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      - MYSQL_ROOT_PASSWORD=root      # <-- CHANGE
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=root_nc        # <-- CHANGE
+    volumes:
+      - nextcloud_db:/var/lib/mysql
+    networks:
+      - office-net
+
+  # ---------- ONLYOFFICE Document Server (editor) ----------
+  onlyoffice:
+    image: docker.io/onlyoffice/documentserver:latest
+    container_name: onlyoffice
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      - JWT_ENABLED=true
+      - JWT_SECRET=e204b94a9b5d89b52ef8848f9efdc019e23aaeb2d40902611d2d3190e69592f9
+      - JWT_HEADER=Authorization
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_log:/var/log/onlyoffice
+      - onlyoffice_lib:/var/lib/onlyoffice
+      - onlyoffice_db:/var/lib/postgresql
+    networks:
+      - office-net
+
+  # ---------- Nextcloud (file storage + web UI) ----------
+  nextcloud:
+    image: docker.io/library/nextcloud:latest
+    container_name: nextcloud
+    restart: always
+    depends_on:
+      - nextcloud-db
+    ports:
+      - "8081:80"
+    environment:
+      - MYSQL_HOST=nextcloud-db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=root_nc               # <-- CHANGE (must match nextcloud-db above)
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=root_admin  # <-- CHANGE
+      - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1:8081 nextcloud  # <-- 'nextcloud' is the container hostname used by ONLYOFFICE for callbacks
+    volumes:
+      - nextcloud_data:/var/www/html
+    networks:
+      - office-net
+
+# ---------- Shared private network (lets containers reach each other by name) ----------
+networks:
+  office-net:
+    driver: bridge
+
+# ---------- Persistent storage ----------
+volumes:
+  nextcloud_db:
+  nextcloud_data:
+  onlyoffice_data:
+  onlyoffice_log:
+  onlyoffice_lib:
+  onlyoffice_db:
