@@ -110,3 +110,4 @@ apache/html/*
 !apache/html/.gitkeep
 
 CONNECTION-GUIDE.md
+My-Domain.txt
